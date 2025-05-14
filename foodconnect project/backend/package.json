@@ -1,0 +1,21 @@
+{
+    "name": "foodconnect-backend",
+    "version": "1.0.0",
+    "description": "Backend for FoodConnect",
+    "main": "server.js",
+    "scripts": {
+      "start": "node server.js",
+      "dev": "nodemon server.js"
+    },
+    "dependencies": {
+      "cors": "^2.8.5",
+      "dotenv": "^16.0.3",
+      "express": "^4.18.2",
+      "express-validator": "^7.0.1",
+      "mongoose": "^7.6.3",
+      "socket.io": "^4.7.2"
+    },
+    "devDependencies": {
+      "nodemon": "^3.0.1"
+    }
+  }

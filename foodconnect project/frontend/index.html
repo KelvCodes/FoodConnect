@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FoodConnect - Reducing Hunger</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="icon" type="image/x-icon" href="/frontend/assets/images/favicon.ico">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      overflow-x: hidden;
+      background: #0f172a;
+      color: #f1f5f9;
+    }
+    .gradient-bg {
+      background: linear-gradient(135deg, #10b981 0%, #fbbf24 100%);
+      transition: background 0.5s ease, transform 0.3s ease;
+    }
+    .gradient-bg:hover {
+      background: linear-gradient(135deg, #059669 0%, #f59e0b 100%);
+    }
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .glass-effect:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+    }
+    .pulse-animation {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    .spin-smooth {
+      animation: spinSmooth 4s linear infinite;
+    }
+    @keyframes spinSmooth {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .fade-in {
+      /* Removed initial opacity: 0 to ensure visibility */
+      transform: translateY(30px);
+    }
+    .scale-in {
+      /* Removed initial opacity: 0 to ensure visibility */
+      transform: scale(0.9);
+    }
+    .hover-scale {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .hover-scale:hover {
+      transform: scale(1.03);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+    .gold-text {
+      background: linear-gradient(to right, #fbbf24, #fef08a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .text-emerald {
+      color: #10b981;
+    }
+    .bg-emerald-600 {
+      background-color: #059669;
+    }
+    .bg-amber-600 {
+      background-color: #d97706;
+    }
+    .bg-sky-600 {
+      background-color: #0284c7;
+    }
+    .btn {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s ease;
+      transform: perspective(1px) translateZ(0);
+      border-radius: 16px;
+      font-weight: 700;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transition: left 0.6s ease;
+      z-index: 0;
+    }
+    .btn:hover::before {
+      left: 100%;
+    }
+    .btn:hover {
+      transform: perspective(1px) translateZ(0) scale(1.05);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      filter: brightness(1.1);
+    }
+    .btn span, .btn i {
+      position: relative;
+      z-index: 1;
+    }
+    .dashboard-card {
+      background: linear-gradient(145deg, #1e293b, #111827);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .dashboard-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(to right, #10b981, #fbbf24);
+      opacity: 0.8;
+    }
+    .dashboard-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+    .dashboard-card h3, .dashboard-card p {
+      transition: color 0.3s ease;
+    }
+    .dashboard-card:hover h3 {
+      color: #fbbf24;
+    }
+    .dashboard-card:hover p {
+      color: #10b981;
+    }
+    input, select {
+      border-radius: 12px;
+      transition: all 0.3s ease;
+      background: #1e293b;
+      color: #f1f5f9;
+      border: 1px solid #4b5563;
+    }
+    input:focus, select:focus {
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3);
+      border-color: #10b981;
+    }
+    .error {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.3);
+      transition: all 0.3s ease;
+    }
+    .modal-content {
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.5s ease;
+    }
+    .modal-content.hidden {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    .modal-content:not(.hidden) {
+      transform: scale(1);
+      opacity: 1;
+    }
+    @media (max-width: 640px) {
+      .mobile-menu {
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: translateY(-100%);
+      }
+      .mobile-menu.active {
+        transform: translateY(0);
+      }
+    }
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #10b981, #fbbf24);
+      border-radius: 5px;
+    }
+    .dashboard-container {
+      background: linear-gradient(145deg, #111827, #1e293b);
+      border-radius: 24px;
+      padding: 2rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+    .dashboard-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.1), transparent);
+      z-index: 0;
+    }
+    .dashboard-container > * {
+      position: relative;
+      z-index: 1;
+    }
+    .chart-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 1.5rem;
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+    .chart-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    }
+    .chart-title {
+      background: linear-gradient(to right, #fbbf24, #fef08a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 1.5rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    canvas {
+      max-width: 100%;
+      height: 150px !important;
+    }
+    .anime-fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    .anime-scale-in {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    video {
+      filter: brightness(0.7) contrast(1.1);
+    }
+    .copy-icon {
+      cursor: pointer;
+      transition: color 0.3s ease, transform 0.3s ease;
+      display: inline-block !important;
+      visibility: visible !important;
+      color: #f1f5f9 !important;
+    }
+    .copy-icon:hover {
+      color: #10b981;
+      transform: scale(1.2);
+    }
+    .parallax-section {
+      position: relative;
+      background-attachment: fixed;
+      background-position: center;
+      background-size: cover;
+      overflow: hidden;
+    }
+    .parallax-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 0;
+    }
+    .parallax-section > * {
+      position: relative;
+      z-index: 1;
+    }
+    .lazy-placeholder {
+      background: #1e293b;
+      height: 100%;
+      width: 100%;
+      display: block;
+    }
+
+  </style>
+</head>
+<body class="font-sans transition-colors duration-500">
+  <header class="gradient-bg text-white py-4 sticky top-0 z-50 shadow-xl glass-effect">
+    <div class="container mx-auto flex justify-between items-center px-4">
+      <div class="flex items-center">
+        <i class="fas fa-utensils text-3xl mr-3 spin-smooth text-emerald"></i>
+        <h1 class="text-3xl font-bold tracking-tight gold-text">FoodConnect</h1>
+      </div>
+      <nav class="hidden md:flex items-center space-x-8">
+        <a href="#home" class="px-4 py-2 text-lg font-medium hover:text-emerald transition-colors duration-300 rounded-lg hover:bg-white hover:bg-opacity-10">Home</a>
+        <a href="#donate" class="px-4 py-2 text-lg font-medium hover:text-emerald transition-colors duration-300 rounded-lg hover:bg-white hover:bg-opacity-10">Donate</a>
+        <a href="#about" class="px-4 py-2 text-lg font-medium hover:text-emerald transition-colors duration-300 rounded-lg hover:bg-white hover:bg-opacity-10">About</a>
+        <a href="#impact" class="px-4 py-2 text-lg font-medium hover:text-emerald transition-colors duration-300 rounded-lg hover:bg-white hover:bg-opacity-10">Impact</a>
+        <a href="#dashboard" class="px-4 py-2 text-lg font-medium hover:text-emerald transition-colors duration-300 rounded-lg hover:bg-white hover:bg-opacity-10">Dashboard</a>
+      </nav>
+      <button class="md:hidden text-2xl hover:text-emerald transition-colors duration-300" id="mobile-menu-button"><i class="fas fa-bars"></i></button>
+    </div>
+    <div class="md:hidden mobile-menu hidden gradient-bg w-full py-4 absolute top-full left-0 shadow-xl glass-effect" id="mobile-menu">
+      <a href="#home" class="block px-6 py-3 text-lg font-medium hover:bg-emerald-600 transition-colors duration-300">Home</a>
+      <a href="#donate" class="block px-6 py-3 text-lg font-medium hover:bg-emerald-600 transition-colors duration-300">Donate</a>
+      <a href="#about" class="block px-6 py-3 text-lg font-medium hover:bg-emerald-600 transition-colors duration-300">About</a>
+      <a href="#impact" class="block px-6 py-3 text-lg font-medium hover:bg-emerald-600 transition-colors duration-300">Impact</a>
+      <a href="#dashboard" class="block px-6 py-3 text-lg font-medium hover:bg-emerald-600 transition-colors duration-300">Dashboard</a>
+    </div>
+  </header>
+
+  <section id="home" class="relative h-screen overflow-hidden parallax-section">
+    <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0">
+      <source src="/frontend/assets/videos/home-bg.mp4" type="video/mp4">
+    </video>
+    <div class="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent z-10"></div>
+    <div class="relative flex items-center justify-start h-full z-20 px-4 md:px-8">
+      <div class="p-8 md:p-12 rounded-3xl max-w-4xl w-full fade-in glass-effect">
+        <h2 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 gold-text leading-tight text-left tracking-tight" data-lang="hero-title">
+          Connecting Surplus Food to Those in Need
+        </h2>
+        <p class="text-lg sm:text-xl md:text-2xl lg:text-3xl mb-8 text-gray-100 text-left font-medium" data-lang="hero-text">
+          Every year, <span style="color: #059669;">1.3 billion tons</span> of food is wasted while <span style="color: #059669;">828 million</span> people go hungry. FoodConnect bridges this gap in real-time.
+        </p>
+        <div class="flex flex-col sm:flex-row flex-wrap justify-start gap-4 sm:gap-6">
+          <a href="#donate" class="btn bg-emerald-600 hover:bg-emerald-700 text-white py-3 sm:py-4 px-6 sm:px-8 rounded-full text-lg sm:text-xl font-semibold pulse-animation text-center">
+            <span data-lang="donate-btn">Donate Food</span> <i class="fas fa-arrow-right ml-3"></i>
+          </a>
+          <a href="#impact" class="btn bg-transparent border-2 border-emerald-600 hover:bg-emerald-600 text-emerald-600 hover:text-white py-3 sm:py-4 px-6 sm:px-8 rounded-full text-lg sm:text-xl font-semibold text-center transition-all duration-300">
+            <span data-lang="impact-btn">See Our Impact</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="py-24 bg-gradient-to-b from-[#0f172a] to-[#1e293b]">
+    <div class="container mx-auto px-4">
+      <h2 class="text-5xl font-bold text-center mb-12 gold-text fade-in" data-lang="about-more-title">About FoodConnect</h2>
+      <p class="text-xl text-center max-w-3xl mx-auto mb-12 text-gray-300 fade-in leading-relaxed" data-lang="about-more-desc">
+        FoodConnect is dedicated to reducing food waste and combating hunger by connecting surplus food with those in need. Our community-driven platform empowers donors, volunteers, and recipients to make a real impact.
+      </p>
+      <div class="flex flex-wrap justify-center gap-8" id="about-images">
+        <div class="w-80 h-96 rounded-3xl shadow-xl scale-in overflow-hidden glass-effect lazy-item">
+          <img src="" alt="Food Donator" class="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500 lazy-placeholder" loading="lazy" data-src="/frontend/assets/images/receiver.jpg">
+        </div>
+        <div class="w-80 h-96 rounded-3xl shadow-xl scale-in overflow-hidden glass-effect lazy-item" style="animation-delay: 0.1s;">
+          <img src="" alt="Volunteer" class="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500 lazy-placeholder" loading="lazy" data-src="/frontend/assets/images/volunteer.jpg">
+        </div>
+        <div class="w-80 h-96 rounded-3xl shadow-xl scale-in overflow-hidden glass-effect lazy-item" style="animation-delay: 0.2s;">
+          <img src="" alt="Food Receiver" class="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500 lazy-placeholder" loading="lazy" data-src="/frontend/assets/images/donator.jpg">
+        </div>
+      </div>
+      <div class="text-center mt-12 fade-in">
+        <a href="#donate" class="btn bg-emerald-600 hover:bg-emerald-700 text-white py-4 px-10 rounded-full text-xl font-semibold hover-scale">
+          <span data-lang="about-more-btn">Join Us Today</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="impact" class="py-24 parallax-section" style="background-image: url('/frontend/assets/images/impact-bg.jpg');">
+    <div class="container mx-auto px-4">
+      <h2 class="text-5xl font-bold text-center mb-12 gold-text fade-in" data-lang="impact-title">Stories of Impact</h2>
+      <div class="text-center mb-12 fade-in">
+        <p class="text-6xl font-extrabold gold-text" id="people-helped">10,000+ <span data-lang="people-helped">People Helped</span></p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="impact-stories">
+        <div class="glass-effect p-8 rounded-3xl scale-in">
+          <p class="italic text-lg mb-4 text-gray-100" data-lang="story1">"FoodConnect delivers fresh meals daily, doubling our shelter’s capacity!"</p>
+          <p class="font-semibold text-emerald">— Maria G., City Homeless Shelter</p>
+        </div>
+        <div class="glass-effect p-8 rounded-3xl scale-in" style="animation-delay: 0.1s;">
+          <p class="italic text-lg mb-4 text-gray-100" data-lang="story2">"Thanks to FoodConnect, our community kitchen feeds 100 more families weekly."</p>
+          <p class="font-semibold text-emerald">— Ahmed R., Food Bank Manager</p>
+        </div>
+        <div class="glass-effect p-8 rounded-3xl scale-in" style="animation-delay: 0.2s;">
+          <p class="italic text-lg mb-4 text-gray-100" data-lang="story3">"Volunteering with FoodConnect changed how I see food waste!"</p>
+          <p class="font-semibold text-emerald">— Priya S., Volunteer</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="donate" class="py-24 bg-gradient-to-b from-[#1e293b] to-[#0f172a]">
+    <div class="container mx-auto px-4">
+      <h2 class="text-5xl font-bold text-center mb-12 gold-text fade-in" data-lang="join-movement">Join the Movement</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto" id="donate-cards">
+        <div class="dashboard-card p-8 rounded-3xl shadow-xl fade-in">
+          <div class="bg-emerald-100 text-emerald-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+            <i class="fas fa-hands-helping text-2xl"></i>
+          </div>
+          <h3 class="text-2xl font-semibold mb-4 text-center text-gray-100" data-lang="donor-title">For Donors</h3>
+          <p class="mb-6 text-gray-300 text-center" data-lang="donor-desc">List surplus food for donation and share your contact details.</p>
+          <button onclick="showDonorForm()" class="btn w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 px-6 rounded-xl font-semibold">
+            <span data-lang="donor-btn">List Food Now</span>
+          </button>
+        </div>
+        <div class="dashboard-card p-8 rounded-3xl shadow-xl fade-in" style="animation-delay: 0.1s;">
+          <div class="bg-sky-100 text-sky-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+            <i class="fas fa-utensils text-2xl"></i>
+          </div>
+          <h3 class="text-2xl font-semibold mb-4 text-center text-gray-100" data-lang="recipient-title">For Recipients</h3>
+          <p class="mb-6 text-gray-300 text-center" data-lang="recipient-desc">Browse and request donations anonymously, providing a contact number and location.</p>
+          <button onclick="showRecipientView()" class="btn w-full bg-sky-600 hover:bg-sky-700 text-white py-3 px-6 rounded-xl font-semibold">
+            <span data-lang="recipient-btn">Browse Donations</span>
+          </button>
+        </div>
+        <div class="dashboard-card p-8 rounded-3xl shadow-xl fade-in" style="animation-delay: 0.2s;">
+          <div class="bg-amber-100 text-amber-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
+            <i class="fas fa-truck text-2xl"></i>
+          </div>
+          <h3 class="text-2xl font-semibold mb-4 text-center text-gray-100" data-lang="volunteer-title">For Volunteers</h3>
+          <p class="mb-6 text-gray-300 text-center" data-lang="volunteer-desc">Join to deliver food from donors to recipients, reducing waste.</p>
+          <button onclick="showVolunteerForm()" class="btn w-full bg-amber-600 hover:bg-amber-700 text-white py-3 px-6 rounded-xl font-semibold">
+            <span data-lang="volunteer-btn">Join as Delivery Volunteer</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="dashboard" class="py-16">
+    <div class="container mx-auto px-4">
+      <h2 class="text-4xl font-bold text-center mb-10 gold-text fade-in" data-lang="dashboard-title">FoodConnect Dashboard</h2>
+      <div class="dashboard-container grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="chart-card anime-scale-in">
+          <h3 class="chart-title" data-lang="donor-stats">Donor Stats</h3>
+          <canvas id="donorChart"></canvas>
+          <div class="text-center mt-3 text-sm text-gray-300">
+            <p id="donor-total">Total: 0</p>
+            <p id="donor-available">Avail: 0</p>
+            <p id="donor-claimed">Claimed: 0</p>
+          </div>
+        </div>
+        <div class="chart-card anime-scale-in" style="animation-delay: 0.1s;">
+          <h3 class="chart-title" data-lang="recipient-stats">Recipient Stats</h3>
+          <canvas id="recipientChart"></canvas>
+          <div class="text-center mt-3 text-sm text-gray-300">
+            <p id="recipient-requested">Req: 0</p>
+            <p id="recipient-delivered">Del: 0</p>
+          </div>
+        </div>
+        <div class="chart-card anime-scale-in" style="animation-delay: 0.2s;">
+          <h3 class="chart-title" data-lang="volunteer-stats">Volunteer Stats</h3>
+          <canvas id="volunteerChart"></canvas>
+          <div class="text-center mt-3 text-sm text-gray-300">
+            <p id="volunteer-registered">Reg: 0</p>
+            <p id="volunteer-deliveries">Pending: 0</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-gradient-to-t from-[#0f172a] to-[#1e293b] text-white py-16">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div class="fade-in">
+          <h3 class="text-3xl font-bold mb-4 flex items-center">
+            <i class="fas fa-utensils text-3xl mr-3 spin-smooth text-emerald"></i>
+            <span class="gold-text">FoodConnect</span>
+          </h3>
+          <p class="text-gray-200 leading-relaxed" data-lang="footer-desc">Bridging the gap between food surplus and hunger through technology.</p>
+        </div>
+        <div class="fade-in" style="animation-delay: 0.1s;">
+          <h4 class="font-semibold text-xl mb-4 text-emerald" data-lang="footer-links">Quick Links</h4>
+          <ul class="space-y-3">
+            <li><a href="#home" class="hover:text-emerald transition-colors duration-300">Home</a></li>
+            <li><a href="#donate" class="hover:text-emerald transition-colors duration-300">Donate</a></li>
+            <li><a href="#about" class="hover:text-emerald transition-colors duration-300">About</a></li>
+            <li><a href="#impact" class="hover:text-emerald transition-colors duration-300">Impact</a></li>
+            <li><a href="#dashboard" class="hover:text-emerald transition-colors duration-300">Dashboard</a></li>
+          </ul>
+        </div>
+        <div class="fade-in" style="animation-delay: 0.2s;">
+          <h4 class="font-semibold text-xl mb-4 text-emerald" data-lang="footer-contact">Contact</h4>
+          <ul class="space-y-3">
+            <li class="flex items-center"><i class="fas fa-envelope mr-3 text-emerald"></i> onlykelvin06@gmail.com</li>
+            <li class="flex items-center"><i class="fas fa-phone mr-3 text-emerald"></i> (+233) 244-472771</li>
+            <li class="flex items-center"><i class="fas fa-map-marker-alt mr-3 text-emerald"></i> Accra, Ghana</li>
+          </ul>
+        </div>
+        <div class="fade-in" style="animation-delay: 0.3s;">
+          <h4 class="font-semibold text-xl mb-4 text-emerald" data-lang="footer-follow">Follow Us</h4>
+          <div class="flex space-x-6">
+            <a href="https://github.com/KelvCodes" class="text-2xl hover:text-emerald transition-colors duration-300 hover:scale-110"><i class="fab fa-github"></i></a>
+            <a href="https://www.youtube.com/@TechTutor_Tv?sub_confirmation=1" class="text-2xl hover:text-emerald transition-colors duration-300 hover:scale-110"><i class="fab fa-youtube"></i></a>
+            <a href="https://www.linkedin.com/in/kelvin-agyare-yeboah-6728a7301" class="text-2xl hover:text-emerald transition-colors duration-300 hover:scale-110"><i class="fab fa-linkedin"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-gray-700 mt-12 pt-8 text-center fade-in">
+        <p class="text-gray-200">© 2025 FoodConnect. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <div id="donorModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
+    <div class="bg-[#1e293b] rounded-3xl max-w-lg w-full mx-4 shadow-2xl modal-content hidden glass-effect">
+      <div class="gradient-bg p-6 rounded-t-3xl flex justify-between items-center">
+        <h3 class="text-2xl font-bold text-white" data-lang="donor-modal-title">List Your Surplus Food</h3>
+        <button onclick="closeModal('donorModal')" class="text-white hover:text-emerald transition-colors duration-300"><i class="fas fa-times text-xl"></i></button>
+      </div>
+      <div class="p-8 max-h-[80vh] overflow-y-auto">
+        <form id="donorForm">
+          <div class="mb-6">
+            <label class="block text-gray-300 mb-2 font-medium" data-lang="donor-business">Business Name</label>
+            <input type="text" name="business" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-500" required>
+          </div>
+          <div class="mb-6">
+            <label class="block text-gray-300 mb-2 font-medium" data-lang="donor-type">Food Type</label>
+            <select name="type" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-500" required>
+              <option value="">Select...</option>
+              <option>Prepared Meals</option>
+              <option>Produce</option>
+              <option>Bakery Items</option>
+              <option>Dairy</option>
+              <option>Dry Goods</option>
+            </select>
+          </div>
+          <div class="mb-6">
+            <label class="block text-gray-300 mb-2 font-medium" data-lang="donor-quantity">Quantity</label>
+            <input type="text" name="quantity" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-500" placeholder="e.g., 10 meals, 5 lbs" required>
+          </div>
+          <div class="mb-6">
+            <label class="block text-gray-300 mb-2 font-medium" data-lang="donor-location">Pickup Location</label>
+            <input type="text" name="location" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-500" placeholder="e.g., Downtown Cafe" required>
+          </div>
+          <div class="mb-6">
+            <label class="block text-gray-300 mb-2 font-medium" data-lang="donor-time">Pickup Time</label>
+            <input type="datetime-local" name="pickup" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-500" required>
+          </div>
+          <div class="mb-6">
+            <label class="block text-gray-300 mb-2 font-medium" data-lang="donor-phone">Phone Number</label>
+            <input type="tel" name="phone" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-emerald-500" pattern="[0-9]{10}" placeholder="1234567890" required>
+          </div>
+          <button type="submit" class="btn w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 px-6 rounded-xl font-semibold" data-lang="donor-submit">Submit Donation</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="recipientModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
+    <div class="bg-[#1e293b] rounded-3xl max-w-lg w-full mx-4 shadow-2xl modal-content hidden glass-effect">
+      <div class="gradient-bg p-6 rounded-t-3xl flex justify-between items-center">
+        <h3 class="text-2xl font-bold text-white" data-lang="recipient-modal-title">Available Donations</h3>
+        <button onclick="closeModal('recipientModal')" class="text-white hover:text-emerald transition-colors duration-300"><i class="fas fa-times text-xl"></i></button>
+      </div>
+      <div class="p-8 max-h-[80vh] overflow-y-auto">
+        <div class="mb-6">
+          <input type="text" id="recipient-search" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-sky-500" placeholder="Search by type or location..." data-lang-placeholder="recipient-search">
+        </div>
+        <div id="donation-list" class="space-y-6"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="recipientContactModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
+    <div class="bg-[#1e293b] rounded-3xl max-w-lg w-full mx-4 shadow-2xl modal-content hidden glass-effect">
+      <div class="gradient-bg p-6 rounded-t-3xl flex justify-between items-center">
+        <h3 class="text-2xl font-bold text-white" data-lang="recipient-contact-title">Enter Your Contact Details</h3>
+        <button onclick="closeModal('recipientContactModal')" class="text-white hover:text-emerald transition-colors duration-300"><i class="fas fa-times text-xl"></i></button>
+      </div>
+      <div class="p-8 max-h-[80vh] overflow-y-auto">
+        <form id="recipientContactForm">
+          <div class="mb-6">
+            <label class="block text-gray-300 mb-2 font-medium" data-lang="recipient-phone">Phone Number</label>
+            <input type="tel" name="phone" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-sky-500" pattern="[0-9]{10}" placeholder="1234567890" required>
+          </div>
+          <div class="mb-6">
+            <label class="block text-gray-300 mb-2 font-medium" data-lang="recipient-location">Delivery Location</label>
+            <input type="text" name="location" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-sky-500" placeholder="e.g., 123 Main St, Accra" required>
+          </div>
+          <button type="submit" class="btn w-full bg-sky-600 hover:bg-sky-700 text-white py-3 px-6 rounded-xl font-semibold" data-lang="recipient-contact-submit">Submit Request</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="volunteerModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
+    <div class="bg-[#1e293b] rounded-3xl max-w-lg w-full mx-4 shadow-2xl modal-content hidden glass-effect">
+      <div class="gradient-bg p-6 rounded-t-3xl flex justify-between items-center">
+        <h3 class="text-2xl font-bold text-white" data-lang="volunteer-modal-title">Join as a Delivery Volunteer</h3>
+        <button onclick="closeModal('volunteerModal')" class="text-white hover:text-emerald transition-colors duration-300"><i class="fas fa-times text-xl"></i></button>
+      </div>
+      <div class="p-8 max-h-[80vh] overflow-y-auto">
+        <form id="volunteerForm">
+          <div class="mb-6">
+            <label class="block text-gray-300 mb-2 font-medium" data-lang="volunteer-name">Full Name</label>
+            <input type="text" name="name" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500" required>
+          </div>
+          <div class="mb-6">
+            <label class="block text-gray-300 mb-2 font-medium" data-lang="volunteer-email">Email</label>
+            <input type="email" name="email" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500" required>
+          </div>
+          <div class="mb-6">
+            <label class="block text-gray-300 mb-2 font-medium" data-lang="volunteer-phone">Phone Number</label>
+            <input type="tel" name="phone" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500" pattern="[0-9]{10}" placeholder="1234567890" required>
+          </div>
+          <button type="submit" class="btn w-full bg-amber-600 hover:bg-amber-700 text-white py-3 px-6 rounded-xl font-semibold" data-lang="volunteer-submit">Register to Deliver Food</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="assignmentModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
+    <div class="bg-[#1e293b] rounded-3xl max-w-lg w-full mx-4 shadow-2xl modal-content hidden glass-effect">
+      <div class="gradient-bg p-6 rounded-t-3xl flex justify-between items-center">
+        <h3 class="text-2xl font-bold text-white" data-lang="assignment-modal-title">Accept Food Delivery</h3>
+        <button onclick="closeModal('assignmentModal')" class="text-white hover:text-emerald transition-colors duration-300"><i class="fas fa-times text-xl"></i></button>
+      </div>
+      <div class="p-8 max-h-[80vh] overflow-y-auto">
+        <div id="assignment-list" class="space-y-6"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function copyPhoneNumber(phone) {
+      if (!phone) {
+        console.error('No phone number provided for copying');
+        alert('No phone number available to copy.');
+        return;
+      }
+      navigator.clipboard.writeText(phone)
+        .then(() => {
+          console.log('Copied phone number:', phone);
+          alert('Phone number copied to clipboard!');
+        })
+        .catch(err => {
+          console.error('Failed to copy phone number:', err);
+          alert('Failed to copy phone number.');
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Lazy Loading for Images
+      const lazyImages = document.querySelectorAll('.lazy-item img');
+      const observerOptions = {
+        root: null,
+        rootMargin: '100px', // Load images 100px before they enter viewport
+        threshold: 0.01 // Trigger when 1% of the element is visible
+      };
+
+      const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const img = entry.target;
+            const src = img.getAttribute('data-src');
+            if (src) {
+              img.src = src;
+              img.classList.remove('lazy-placeholder');
+              anime({
+                targets: img,
+                opacity: [0, 1],
+                scale: [0.9, 1],
+                easing: 'easeOutExpo',
+                duration: 800
+              });
+              observer.unobserve(img);
+            }
+          }
+        });
+      }, observerOptions);
+
+      lazyImages.forEach(img => imageObserver.observe(img));
+
+      // Animations for Non-Lazy Elements (Cards, Text, etc.)
+      const fadeElements = document.querySelectorAll('.fade-in');
+      const scaleElements = document.querySelectorAll('.scale-in');
+      const observerOptionsForElements = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+      };
+
+      const elementObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            if (entry.target.classList.contains('fade-in')) {
+              anime({
+                targets: entry.target,
+                opacity: [0, 1],
+                translateY: [30, 0],
+                easing: 'easeOutExpo',
+                duration: 800
+              });
+            } else if (entry.target.classList.contains('scale-in')) {
+              anime({
+                targets: entry.target,
+                opacity: [0, 1],
+                scale: [0.9, 1],
+                easing: 'easeOutExpo',
+                duration: 600
+              });
+            }
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptionsForElements);
+
+      fadeElements.forEach(el => elementObserver.observe(el));
+      scaleElements.forEach(el => elementObserver.observe(el));
+
+      // Fallback: Ensure elements are animated after 2 seconds if observer fails
+      setTimeout(() => {
+        fadeElements.forEach(el => {
+          if (window.getComputedStyle(el).opacity === '0') {
+            anime({
+              targets: el,
+              opacity: [0, 1],
+              translateY: [30, 0],
+              easing: 'easeOutExpo',
+              duration: 800
+            });
+          }
+        });
+        scaleElements.forEach(el => {
+          if (window.getComputedStyle(el).transform.includes('scale(0.9)')) {
+            anime({
+              targets: el,
+              opacity: [0, 1],
+              scale: [0.9, 1],
+              easing: 'easeOutExpo',
+              duration: 600
+            });
+          }
+        });
+      }, 2000);
+
+      // Initial Animations for Dashboard Charts
+      anime({
+        targets: '.anime-scale-in',
+        opacity: [0, 1],
+        scale: [0.9, 1],
+        easing: 'easeOutExpo',
+        duration: 600,
+        delay: anime.stagger(100)
+      });
+    });
+  </script>
+  <script src="/frontend/assets/frontend-script.js"></script>
+</body>
+</html>
