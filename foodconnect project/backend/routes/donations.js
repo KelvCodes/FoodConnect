@@ -1,5 +1,5 @@
 
-      type,
+   ,
       location,
       pickup,
       phone,
