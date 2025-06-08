@@ -1,5 +1,4 @@
 
-    res.status(201).json({ message: 'Donation submitted', donation });
   } catch (err) {
     console.error('POST /api/donations - Error:', err);
     res.status(500).json({ error: 'Server error' });
