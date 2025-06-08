@@ -1,7 +1,5 @@
 
-    res.status(500).json({ error: 'Server error' });
-  }
-});
+
 
 router.get('/:id', async (req, res) => {
   try {
