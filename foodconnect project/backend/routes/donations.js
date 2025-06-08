@@ -1,5 +1,5 @@
 
-const router = express.Router();
+
 const { body, validationResult } = require('express-validator');
 const Donation = require('../models/Donation');
 
