@@ -1,6 +1,4 @@
 
-  body('location').notEmpty().trim().withMessage('Delivery location is required')
-];
 
 router.get('/', async (req, res) => {
   try {
