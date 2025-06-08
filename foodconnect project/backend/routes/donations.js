@@ -1,8 +1,4 @@
-
-   ,
-   
-      phone,
-      status: 'available'
+'
     });
     await donation.save();
     console.log('POST /api/donations - Created donation:', donation);
