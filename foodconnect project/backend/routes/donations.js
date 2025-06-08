@@ -1,10 +1,4 @@
 
-        status: 'claimed', 
-        recipientPhone: req.body.phone, 
-        recipientLocation: req.body.location 
-      },
-      { new: true }
-    );
     
     if (!donation) {
       console.log(`POST /api/donations/${req.params.id}/request - Donation not found or already claimed`);
