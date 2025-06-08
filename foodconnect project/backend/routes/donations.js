@@ -1,5 +1,4 @@
 
-  if (!errors.isEmpty()) 
     
     
     console.log('POST /api/donations/:id/request - Validation errors:', errors.array());
