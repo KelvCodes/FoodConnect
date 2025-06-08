@@ -1,9 +1,4 @@
 
-    
-    if (!donation) {
-      console.log(`POST /api/donations/${req.params.id}/request - Donation not found or already claimed`);
-      return res.status(404).json({ error: 'Donation not found or already claimed' });
-    }
 
     console.log('POST /api/donations/:id/request - Updated donation:', donation);
     req.io.emit('donationUpdate', donation);
