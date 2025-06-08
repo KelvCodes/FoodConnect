@@ -1,5 +1,7 @@
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
+
+  if (!errors.isEmpty()) 
+    
+    
     console.log('POST /api/donations/:id/request - Validation errors:', errors.array());
     return res.status(400).json({ errors: errors.array() });
   }
