@@ -1,6 +1,4 @@
 
-  try {
-    const donations = await Donation.find();
     console.log('GET /api/donations - Fetched donations:', donations);
     res.json(donations);
   } catch (err) {
