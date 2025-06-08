@@ -1,5 +1,4 @@
 
-    console.error('GET /api/donations - Error:', err);
     res.status(500).json({ error: 'Server error' });
   }
 });
