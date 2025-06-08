@@ -1,5 +1,4 @@
-
-    console.log('POST /api/donations - Created donation:', donation);
+\
     req.io.emit('newDonation', donation);
     res.status(201).json({ message: 'Donation submitted', donation });
   } catch (err) {
