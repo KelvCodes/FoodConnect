@@ -1,6 +1,4 @@
 
-
-const validateDonation = [
   body('business').notEmpty().trim().withMessage('Business name is required'),
   body('quantity').notEmpty().trim().withMessage('Quantity is required'),
   body('type').notEmpty().trim().withMessage('Food type is required'),
