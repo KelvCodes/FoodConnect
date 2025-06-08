@@ -1,8 +1,7 @@
 
 
 
-    const donation = await Donation.findById(req.params.id);
-    if (!donation) {
+    const
       console.log(`GET /api/donations/${req.params.id} - Donation not found`);
       return res.status(404).json({ error: 'Donation not found' });
     }
