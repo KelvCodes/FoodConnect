@@ -1,5 +1,5 @@
 
-  body('pickup').notEmpty().trim().withMessage('Pickup time is required'),
+
   body('phone').isMobilePhone().trim().withMessage('Valid phone number is required')
 ];
 
