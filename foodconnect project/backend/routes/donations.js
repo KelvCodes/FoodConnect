@@ -1,5 +1,3 @@
-
-router.post('/:id/request', validateRecipient, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     console.log('POST /api/donations/:id/request - Validation errors:', errors.array());
