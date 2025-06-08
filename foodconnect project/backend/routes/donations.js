@@ -1,5 +1,4 @@
 
-    console.log('GET /api/donations - Fetched donations:', donations);
     res.json(donations);
   } catch (err) {
     console.error('GET /api/donations - Error:', err);
