@@ -1,8 +1,7 @@
 
 
 
-    const
-      console.log(`GET /api/donations/${req.params.id} - Donation not found`);
+
       return res.status(404).json({ error: 'Donation not found' });
     }
     console.log(`GET /api/donations/${req.params.id} - Fetched donation:`, donation);
