@@ -1,5 +1,4 @@
 
-      quantity,
       type,
       location,
       pickup,
