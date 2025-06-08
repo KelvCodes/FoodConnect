@@ -1,7 +1,6 @@
 
    ,
-      location,
-      pickup,
+   
       phone,
       status: 'available'
     });
