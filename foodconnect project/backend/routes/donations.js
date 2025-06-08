@@ -1,6 +1,4 @@
 
-      { _id: req.params.id, status: 'available' },
-      { 
         status: 'claimed', 
         recipientPhone: req.body.phone, 
         recipientLocation: req.body.location 
