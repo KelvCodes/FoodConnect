@@ -1,4 +1,4 @@
-const express = require('express');
+'express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const Donation = require('../models/Donation');
