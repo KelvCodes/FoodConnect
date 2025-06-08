@@ -1,8 +1,4 @@
 
-    res.status(500).json({ error: 'Server error' });
-  }
-});
-
 router.post('/:id/request', validateRecipient, async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
