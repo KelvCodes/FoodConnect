@@ -1,8 +1,4 @@
 
-
-    console.log('POST /api/donations/:id/request - Updated donation:', donation);
-    req.io.emit('donationUpdate', donation);
-    res.json({ message: 'Request submitted', donation });
   } catch (err) {
     console.error('POST /api/donations/:id/request - Error:', err);
     res.status(500).json({ error: 'Server error' });
