@@ -1,6 +1,4 @@
 
-  body('quantity').notEmpty().trim().withMessage('Quantity is required'),
-  body('type').notEmpty().trim().withMessage('Food type is required'),
   body('location').notEmpty().trim().withMessage('Pickup location is required'),
   body('pickup').notEmpty().trim().withMessage('Pickup time is required'),
   body('phone').isMobilePhone().trim().withMessage('Valid phone number is required')
