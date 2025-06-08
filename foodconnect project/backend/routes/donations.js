@@ -1,5 +1,4 @@
 
-      name: `${business} Donation`,
       quantity,
       type,
       location,
