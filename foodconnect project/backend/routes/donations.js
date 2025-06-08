@@ -1,6 +1,4 @@
 
-  } catch (err) {
-    console.error('POST /api/donations - Error:', err);
     res.status(500).json({ error: 'Server error' });
   }
 });
