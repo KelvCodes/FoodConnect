@@ -1,10 +1,4 @@
 
-
-
-
- 
-    console.log(`GET /api/donations/${req.params.id} - Fetched donation:`, donation);
-    res.json(donation);
   } catch (err) {
     console.error(`GET /api/donations/${req.params.id} - Error:`, err);
     res.status(500).json({ error: 'Server error' });
