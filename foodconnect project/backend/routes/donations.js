@@ -1,8 +1,6 @@
 
 
 
-route'/:id', async (req, res) => {
-  try {
     const donation = await Donation.findById(req.params.id);
     if (!donation) {
       console.log(`GET /api/donations/${req.params.id} - Donation not found`);
