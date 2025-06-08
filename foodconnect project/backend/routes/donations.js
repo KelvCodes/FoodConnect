@@ -1,8 +1,4 @@
 
-  }
-
-  try {
-    const donation = await Donation.findOneAndUpdate(
       { _id: req.params.id, status: 'available' },
       { 
         status: 'claimed', 
