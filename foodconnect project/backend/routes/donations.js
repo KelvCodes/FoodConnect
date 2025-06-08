@@ -1,7 +1,5 @@
 
-
-  try {
-    const { business, quantity, type, location, pickup, phone } = req.body;
+y;
     const donation = new Donation({
       name: `${business} Donation`,
       quantity,
