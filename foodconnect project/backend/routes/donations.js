@@ -1,6 +1,4 @@
 
-y;
-    const donation = new Donation({
       name: `${business} Donation`,
       quantity,
       type,
