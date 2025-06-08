@@ -1,5 +1,4 @@
 
-const Donation = require('../models/Donation');
 
 const validateDonation = [
   body('business').notEmpty().trim().withMessage('Business name is required'),
