@@ -1,7 +1,7 @@
 
 
 
-router.get('/:id', async (req, res) => {
+route'/:id', async (req, res) => {
   try {
     const donation = await Donation.findById(req.params.id);
     if (!donation) {
