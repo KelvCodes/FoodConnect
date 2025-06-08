@@ -1,5 +1,4 @@
 
-const validateRecipient = [
   body('phone').isMobilePhone().trim().withMessage('Valid phone number is required'),
   body('location').notEmpty().trim().withMessage('Delivery location is required')
 ];
