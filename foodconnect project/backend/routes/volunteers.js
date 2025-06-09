@@ -1,5 +1,4 @@
-'Server error' });
-  }
+
 });
 
 router.post('/', validateVolunteer, async (req, res) => {
