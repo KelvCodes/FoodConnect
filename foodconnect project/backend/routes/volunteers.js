@@ -1,6 +1,4 @@
 
-
-const validateVolunt
   body('name').notEmpty().trim(),
   body('email').isEmail().trim(),
   body('phone').isMobilePhone().trim()
