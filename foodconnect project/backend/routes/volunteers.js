@@ -1,4 +1,4 @@
-).json({ error: 'Server error' });
+r: 'Server error' });
   }
 });
 
