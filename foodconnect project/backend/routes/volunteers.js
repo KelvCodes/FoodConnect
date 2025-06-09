@@ -1,5 +1,4 @@
 
- new Volunteer(req.body);
     await volunteer.save();
     req.io.emit('newVolunteer', volunteer);
     res.status(201).json({ message: 'Volunteer registered' });
