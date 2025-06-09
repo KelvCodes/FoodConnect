@@ -1,5 +1,4 @@
 
-  body('phone').isMobilePhone().trim()
 ];
 
 router.get('/', async (req, res) => {
