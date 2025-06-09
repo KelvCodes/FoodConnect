@@ -1,5 +1,4 @@
 
-  try {
     const volunteers = await Volunteer.find();
     res.json(volunteers);
   } catch (err) {
