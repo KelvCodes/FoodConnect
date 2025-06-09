@@ -1,5 +1,5 @@
 
-    res.json(volunteers);
+    res.json(
   } catch (err) {
     res.status(500).json({ error: 'Server error' });
   }
