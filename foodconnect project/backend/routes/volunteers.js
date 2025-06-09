@@ -1,5 +1,4 @@
-
-    const volunteers = await Volunteer.find();
+ = await Volunteer.find();
     res.json(volunteers);
   } catch (err) {
     res.status(500).json({ error: 'Server error' });
