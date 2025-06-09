@@ -1,7 +1,5 @@
 
 
-const Volunteer = require('../models/Volunteer');
-
 const validateVolunteer = [
   body('name').notEmpty().trim(),
   body('email').isEmail().trim(),
