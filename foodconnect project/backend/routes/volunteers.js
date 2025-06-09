@@ -6,12 +6,7 @@
  *   GET  /            → Fetch a list of volunteers
  *   POST /            → Register a new volunteer
  *
- * Behaviour is identical to the original snippet, but with:
- *   • Detailed inline documentation
- *   • Clear validation messages
- *   • Lean database queries for minor performance gains
- *   • Defensive error handling & logging
- */
+
 
 const express = require('express');
 const router  = express.Router();
