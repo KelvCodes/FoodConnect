@@ -1,5 +1,4 @@
 
-  try {
     const volunteer = new Volunteer(req.body);
     await volunteer.save();
     req.io.emit('newVolunteer', volunteer);
