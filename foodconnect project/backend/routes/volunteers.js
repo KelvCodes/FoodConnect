@@ -1,4 +1,4 @@
-tus(400).json({ errors: errors.array() });
+ors: errors.array() });
   }
 
   try {
