@@ -1,5 +1,4 @@
-
-    res.status(500).json({ error: 'Server error' });
+).json({ error: 'Server error' });
   }
 });
 
