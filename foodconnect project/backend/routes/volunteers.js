@@ -1,5 +1,4 @@
 
-  body('email').isEmail().trim(),
   body('phone').isMobilePhone().trim()
 ];
 
