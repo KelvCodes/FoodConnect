@@ -1,5 +1,3 @@
-ors: errors.array() });
-  }
 
   try {
     const volunteer = new Volunteer(req.body);
