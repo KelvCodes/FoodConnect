@@ -1,5 +1,5 @@
 
-const { body, validationResult } = require('express-validator');
+
 const Volunteer = require('../models/Volunteer');
 
 const validateVolunteer = [
