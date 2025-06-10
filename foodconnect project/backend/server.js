@@ -1,5 +1,4 @@
 
-    console.log('Client disconnected:', socket.id);
   });
 });
 
