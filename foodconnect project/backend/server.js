@@ -1,9 +1,6 @@
 
 
 
-    res.status(500).json({ error: 'Server error' });
-  }
-});
 
 // MongoDB Connection
 mongoose.connect(MONGODB_URI, {
