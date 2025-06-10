@@ -1,6 +1,4 @@
 
-
-const volunteerRoutes = require('./routes/volunteers');
 const Donation = require('./models/Donation');
 const Volunteer = require('./models/Volunteer');
 
