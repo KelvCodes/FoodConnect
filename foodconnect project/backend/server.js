@@ -1,6 +1,4 @@
 
-  
-});
 
 // Start Server
 server.listen(PORT, () => {
