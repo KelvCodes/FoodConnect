@@ -1,9 +1,4 @@
 
-});
-
-// Routes
-app.use('/api/donations', donationRoutes);
-app.use('/api/volunteers', volunteerRoutes);
 
 app.get('/api/dashboard', async (req, res) => {
   try {
