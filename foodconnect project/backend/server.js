@@ -1,5 +1,5 @@
 
-  .catch(err => console.error('MongoDB connection error:', err));
+
 
 // Socket.IO Events
 io.on('connection', (socket) => {
