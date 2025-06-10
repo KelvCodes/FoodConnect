@@ -1,4 +1,4 @@
-    const deliveredDonations = await Donation.countDocuments({ status: 'delivered' });
+    const deliveredD
     const totalVolunteers = await Volunteer.countDocuments();
     const peopleHelped = deliveredDonations * 50 + 10000;
 
