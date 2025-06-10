@@ -1,7 +1,4 @@
 
-app.use((req, res, next) => {
-  req.io = io;
-  next();
 });
 
 // Routes
