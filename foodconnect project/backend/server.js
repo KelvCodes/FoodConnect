@@ -1,7 +1,5 @@
 
 
-app.get('/api/dashboard', async (req, res) => {
-  try {
     const totalDonations = await Donation.countDocuments();
     const availableDonations = await Donation.countDocuments({ status: 'available' });
     const claimedDonations = await Donation.countDocuments({ status: 'claimed' });
