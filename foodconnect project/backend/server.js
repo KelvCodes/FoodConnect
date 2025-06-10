@@ -1,5 +1,4 @@
 
-const http = require('http');
 const socketIo = require('socket.io');
 const dotenv = require('dotenv');
 const donationRoutes = require('./routes/donations');
