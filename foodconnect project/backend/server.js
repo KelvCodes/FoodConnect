@@ -1,6 +1,4 @@
 
-// Middleware
-app.use(cors());
 app.use(express.json());
 
 // Pass io to routes
