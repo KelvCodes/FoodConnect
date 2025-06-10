@@ -1,5 +1,4 @@
 
-dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
