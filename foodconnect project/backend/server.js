@@ -1,6 +1,4 @@
 
-    const peopleHelped = deliveredDonations * 50 + 10000;
-
     res.json({
       totalDonations,
       availableDonations,
