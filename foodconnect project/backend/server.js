@@ -1,5 +1,5 @@
 
-      deliveredDonations,
+
       totalVolunteers,
       peopleHelped
     });
