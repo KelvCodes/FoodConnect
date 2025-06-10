@@ -1,6 +1,4 @@
 
-    res.json({
-      totalDonations,
       availableDonations,
       claimedDonations,
       deliveredDonations,
