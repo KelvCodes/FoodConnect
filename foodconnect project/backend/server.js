@@ -1,5 +1,4 @@
 
-const Donation = require('./models/Donation');
 const Volunteer = require('./models/Volunteer');
 
 dotenv.config();
