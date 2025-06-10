@@ -1,7 +1,4 @@
 
-app.use(express.json());
-
-// Pass io to routes
 app.use((req, res, next) => {
   req.io = io;
   next();
