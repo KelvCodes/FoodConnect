@@ -1,6 +1,4 @@
 
-const Volunteer = require('./models/Volunteer');
-
 dotenv.config();
 
 const app = express();
