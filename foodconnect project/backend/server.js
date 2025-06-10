@@ -1,5 +1,4 @@
 
-const dotenv = require('dotenv');
 const donationRoutes = require('./routes/donations');
 const volunteerRoutes = require('./routes/volunteers');
 const Donation = require('./models/Donation');
